@@ -492,7 +492,7 @@ async def get_all_users(current_user: User = Depends(require_role(UserRole.ADMIN
     # Remove password hashes
     for user in users:
         user.pop("hashed_password", None)
-    return users
+    return serialize_doc(users)
 
 @api_router.get("/admin/companies")
 async def get_all_companies(current_user: User = Depends(require_role(UserRole.ADMIN))):
