@@ -451,7 +451,7 @@ async def update_job(
         )
     
     updated_job = await db.jobs.find_one({"id": job_id})
-    return updated_job
+    return serialize_doc(updated_job)
 
 @api_router.get("/company/jobs/{job_id}/applications")
 async def get_job_applications(
