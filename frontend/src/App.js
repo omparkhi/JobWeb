@@ -894,21 +894,21 @@ const CompanyDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-black">
       <Navigation />
       
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-lg">
-          <div className="border-b border-gray-200">
+        <div className="bg-white/5 backdrop-blur-md rounded-xl shadow-xl border border-white/10">
+          <div className="border-b border-white/10">
             <nav className="flex space-x-8 px-6">
               {['profile', 'jobs', 'applications'].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                  className={`py-4 px-2 border-b-2 font-medium text-sm transition-all duration-300 ${
                     activeTab === tab
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                      ? 'border-blue-500 text-blue-400'
+                      : 'border-transparent text-gray-400 hover:text-white hover:border-gray-600'
                   }`}
                 >
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -919,21 +919,42 @@ const CompanyDashboard = () => {
           
           <div className="p-6">
             {activeTab === 'profile' && (
-              <div className="text-center py-8">
-                <h2 className="text-2xl font-bold text-gray-900">Company Profile</h2>
-                <p className="text-gray-600 mt-2">Manage your company information</p>
+              <div className="text-center py-12">
+                <div className="mb-6">
+                  <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                  </div>
+                  <h2 className="text-2xl font-bold text-white">Company Profile</h2>
+                  <p className="text-gray-300 mt-2">Manage your company information</p>
+                </div>
               </div>
             )}
             {activeTab === 'jobs' && (
-              <div className="text-center py-8">
-                <h2 className="text-2xl font-bold text-gray-900">Job Postings</h2>
-                <p className="text-gray-600 mt-2">Create and manage your job listings</p>
+              <div className="text-center py-12">
+                <div className="mb-6">
+                  <div className="w-20 h-20 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m8 0H8m8 0v2a2 2 0 01-2 2H10a2 2 0 01-2-2V8m8 0V6a2 2 0 00-2-2H10a2 2 0 00-2 2v2" />
+                    </svg>
+                  </div>
+                  <h2 className="text-2xl font-bold text-white">Job Postings</h2>
+                  <p className="text-gray-300 mt-2">Create and manage your job listings</p>
+                </div>
               </div>
             )}
             {activeTab === 'applications' && (
-              <div className="text-center py-8">
-                <h2 className="text-2xl font-bold text-gray-900">Applications</h2>
-                <p className="text-gray-600 mt-2">Review and manage job applications</p>
+              <div className="text-center py-12">
+                <div className="mb-6">
+                  <div className="w-20 h-20 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <h2 className="text-2xl font-bold text-white">Applications</h2>
+                  <p className="text-gray-300 mt-2">Review and manage job applications</p>
+                </div>
               </div>
             )}
           </div>
