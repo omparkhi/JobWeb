@@ -341,7 +341,7 @@ async def search_jobs(
         query["experience_level"] = {"$regex": experience, "$options": "i"}
     
     jobs = await db.jobs.find(query).to_list(100)
-    return jobs
+    return serialize_doc(jobs)
 
 @api_router.post("/candidate/applications")
 async def apply_for_job(
