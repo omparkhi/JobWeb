@@ -378,7 +378,7 @@ async def apply_for_job(
 @api_router.get("/candidate/applications")
 async def get_my_applications(current_user: User = Depends(require_role(UserRole.CANDIDATE))):
     applications = await db.applications.find({"candidate_id": current_user.id}).to_list(100)
-    return applications
+    return serialize_doc(applications)
 
 # Company Routes
 @api_router.get("/company/profile")
