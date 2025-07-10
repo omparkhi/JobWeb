@@ -521,7 +521,7 @@ async def reject_company(
         {"$set": {"is_approved": False}}
     )
     company = await db.company_profiles.find_one({"id": company_id})
-    return company
+    return serialize_doc(company)
 
 @api_router.get("/admin/jobs")
 async def get_all_jobs(current_user: User = Depends(require_role(UserRole.ADMIN))):
