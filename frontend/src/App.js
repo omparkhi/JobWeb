@@ -270,36 +270,44 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-black flex items-center justify-center px-4">
-      <div className="bg-white/10 backdrop-blur-md rounded-lg p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold text-white mb-6 text-center">Login</h2>
+    <div className="min-h-screen bg-black relative overflow-hidden flex items-center justify-center px-4">
+      {/* Animated Background */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-600 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-blue-400 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      </div>
+      
+      <div className="bg-white/5 backdrop-blur-md rounded-xl p-8 w-full max-w-md border border-white/10 hover:bg-white/10 transition-all duration-300 relative z-10">
+        <h2 className="text-3xl font-bold text-white mb-6 text-center">
+          Welcome Back
+        </h2>
         
         {error && (
-          <div className="bg-red-500/20 border border-red-500 text-red-200 px-4 py-2 rounded mb-4">
+          <div className="bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg mb-4 animate-shake">
             {error}
           </div>
         )}
         
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-white mb-2">Email</label>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <label className="block text-white font-medium">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 bg-white/20 border border-white/30 rounded text-white placeholder-gray-300"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
               placeholder="Enter your email"
               required
             />
           </div>
           
-          <div>
-            <label className="block text-white mb-2">Password</label>
+          <div className="space-y-2">
+            <label className="block text-white font-medium">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 bg-white/20 border border-white/30 rounded text-white placeholder-gray-300"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
               placeholder="Enter your password"
               required
             />
@@ -308,16 +316,23 @@ const LoginPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded transition-colors disabled:opacity-50"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition-all duration-300 transform hover:scale-105 font-semibold disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/30"
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                Logging in...
+              </div>
+            ) : (
+              'Login'
+            )}
           </button>
         </form>
         
-        <div className="mt-4 text-center">
+        <div className="mt-6 text-center">
           <button
             onClick={() => navigate('/register')}
-            className="text-blue-400 hover:text-blue-300"
+            className="text-blue-400 hover:text-blue-300 transition-colors duration-300"
           >
             Don't have an account? Register
           </button>
