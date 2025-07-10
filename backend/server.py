@@ -509,7 +509,7 @@ async def approve_company(
         {"$set": {"is_approved": True}}
     )
     company = await db.company_profiles.find_one({"id": company_id})
-    return company
+    return serialize_doc(company)
 
 @api_router.put("/admin/companies/{company_id}/reject")
 async def reject_company(
