@@ -306,7 +306,7 @@ async def get_candidate_profile(current_user: User = Depends(require_role(UserRo
     profile = await db.candidate_profiles.find_one({"user_id": current_user.id})
     if not profile:
         raise HTTPException(status_code=404, detail="Profile not found")
-    return profile
+    return serialize_doc(profile)
 
 @api_router.put("/candidate/profile")
 async def update_candidate_profile(
