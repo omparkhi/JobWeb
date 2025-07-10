@@ -629,94 +629,94 @@ const ProfileTab = ({ profile, onUpdate }) => {
   return (
     <div className="max-w-2xl">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Profile</h2>
+        <h2 className="text-2xl font-bold text-white">Profile</h2>
         <button
           onClick={() => setEditing(!editing)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105"
         >
           {editing ? 'Cancel' : 'Edit'}
         </button>
       </div>
       
       {editing ? (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Skills</label>
+            <label className="block text-sm font-medium text-white mb-2">Skills</label>
             <input
               type="text"
               value={formData.skills?.join(', ') || ''}
               onChange={(e) => setFormData({...formData, skills: e.target.value.split(', ').filter(s => s)})}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="e.g., JavaScript, React, Node.js"
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Experience</label>
+            <label className="block text-sm font-medium text-white mb-2">Experience</label>
             <textarea
               value={formData.experience || ''}
               onChange={(e) => setFormData({...formData, experience: e.target.value})}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              rows="3"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              rows="4"
               placeholder="Describe your experience"
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+            <label className="block text-sm font-medium text-white mb-2">Location</label>
             <input
               type="text"
               value={formData.location || ''}
               onChange={(e) => setFormData({...formData, location: e.target.value})}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="e.g., New York, NY"
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+            <label className="block text-sm font-medium text-white mb-2">Phone</label>
             <input
               type="tel"
               value={formData.phone || ''}
               onChange={(e) => setFormData({...formData, phone: e.target.value})}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="e.g., +1 (555) 123-4567"
             />
           </div>
           
           <button
             type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-all duration-300 transform hover:scale-105"
           >
             Save Changes
           </button>
         </form>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Skills</h3>
+            <h3 className="text-lg font-medium text-white mb-3">Skills</h3>
             <div className="flex flex-wrap gap-2">
               {profile.skills?.map((skill, index) => (
-                <span key={index} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">
+                <span key={index} className="bg-blue-600/20 text-blue-300 px-3 py-1 rounded-full text-sm border border-blue-600/30">
                   {skill}
                 </span>
-              ))}
+              )) || <span className="text-gray-400">No skills added</span>}
             </div>
           </div>
           
           <div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Experience</h3>
-            <p className="text-gray-600">{profile.experience || 'No experience added'}</p>
+            <h3 className="text-lg font-medium text-white mb-3">Experience</h3>
+            <p className="text-gray-300">{profile.experience || 'No experience added'}</p>
           </div>
           
           <div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Location</h3>
-            <p className="text-gray-600">{profile.location || 'No location added'}</p>
+            <h3 className="text-lg font-medium text-white mb-3">Location</h3>
+            <p className="text-gray-300">{profile.location || 'No location added'}</p>
           </div>
           
           <div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Phone</h3>
-            <p className="text-gray-600">{profile.phone || 'No phone added'}</p>
+            <h3 className="text-lg font-medium text-white mb-3">Phone</h3>
+            <p className="text-gray-300">{profile.phone || 'No phone added'}</p>
           </div>
         </div>
       )}
