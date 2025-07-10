@@ -400,7 +400,7 @@ async def update_company_profile(
             {"$set": update_data}
         )
     profile = await db.company_profiles.find_one({"user_id": current_user.id})
-    return profile
+    return serialize_doc(profile)
 
 @api_router.post("/company/jobs")
 async def create_job(
