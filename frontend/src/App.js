@@ -982,27 +982,84 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-black">
       <Navigation />
       
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Admin Dashboard</h2>
+        <div className="bg-white/5 backdrop-blur-md rounded-xl shadow-xl p-6 border border-white/10">
+          <h2 className="text-3xl font-bold text-white mb-8">Admin Dashboard</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h3 className="text-lg font-semibold text-blue-900">Total Users</h3>
-              <p className="text-2xl font-bold text-blue-600">{analytics.total_users || 0}</p>
+            <div className="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-blue-500/30 hover:bg-white/20 transition-all duration-300">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-blue-300">Total Users</h3>
+                  <p className="text-3xl font-bold text-white mt-2">{analytics.total_users || 0}</p>
+                </div>
+                <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                  </svg>
+                </div>
+              </div>
             </div>
             
-            <div className="bg-green-50 p-4 rounded-lg">
-              <h3 className="text-lg font-semibold text-green-900">Total Jobs</h3>
-              <p className="text-2xl font-bold text-green-600">{analytics.total_jobs || 0}</p>
+            <div className="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-green-500/30 hover:bg-white/20 transition-all duration-300">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-green-300">Total Jobs</h3>
+                  <p className="text-3xl font-bold text-white mt-2">{analytics.total_jobs || 0}</p>
+                </div>
+                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m8 0H8m8 0v2a2 2 0 01-2 2H10a2 2 0 01-2-2V8m8 0V6a2 2 0 00-2-2H10a2 2 0 00-2 2v2" />
+                  </svg>
+                </div>
+              </div>
             </div>
             
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <h3 className="text-lg font-semibold text-purple-900">Applications</h3>
-              <p className="text-2xl font-bold text-purple-600">{analytics.total_applications || 0}</p>
+            <div className="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-purple-500/30 hover:bg-white/20 transition-all duration-300">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-purple-300">Applications</h3>
+                  <p className="text-3xl font-bold text-white mt-2">{analytics.total_applications || 0}</p>
+                </div>
+                <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-orange-500/30">
+              <h3 className="text-lg font-semibold text-orange-300 mb-4">Company Status</h3>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Approved Companies</span>
+                  <span className="text-green-400 font-semibold">{analytics.approved_companies || 0}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Pending Companies</span>
+                  <span className="text-yellow-400 font-semibold">{analytics.pending_companies || 0}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-cyan-500/30">
+              <h3 className="text-lg font-semibold text-cyan-300 mb-4">User Distribution</h3>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Candidates</span>
+                  <span className="text-blue-400 font-semibold">{analytics.total_candidates || 0}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Companies</span>
+                  <span className="text-green-400 font-semibold">{analytics.total_companies || 0}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
