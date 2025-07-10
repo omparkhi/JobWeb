@@ -564,21 +564,21 @@ const CandidateDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-black">
       <Navigation />
       
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-lg">
-          <div className="border-b border-gray-200">
+        <div className="bg-white/5 backdrop-blur-md rounded-xl shadow-xl border border-white/10">
+          <div className="border-b border-white/10">
             <nav className="flex space-x-8 px-6">
               {['profile', 'jobs', 'applications'].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                  className={`py-4 px-2 border-b-2 font-medium text-sm transition-all duration-300 ${
                     activeTab === tab
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                      ? 'border-blue-500 text-blue-400'
+                      : 'border-transparent text-gray-400 hover:text-white hover:border-gray-600'
                   }`}
                 >
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
