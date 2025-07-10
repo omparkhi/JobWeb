@@ -483,7 +483,7 @@ async def update_application_status(
     )
     
     updated_application = await db.applications.find_one({"id": application_id})
-    return updated_application
+    return serialize_doc(updated_application)
 
 # Admin Routes
 @api_router.get("/admin/users")
