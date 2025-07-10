@@ -826,35 +826,35 @@ const JobsTab = ({ jobs, onApply, searchFilters, setSearchFilters, onSearch, app
 const ApplicationsTab = ({ applications }) => {
   const getStatusColor = (status) => {
     switch (status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'shortlisted': return 'bg-blue-100 text-blue-800';
-      case 'accepted': return 'bg-green-100 text-green-800';
-      case 'rejected': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'pending': return 'bg-yellow-600/20 text-yellow-300 border-yellow-600/30';
+      case 'shortlisted': return 'bg-blue-600/20 text-blue-300 border-blue-600/30';
+      case 'accepted': return 'bg-green-600/20 text-green-300 border-green-600/30';
+      case 'rejected': return 'bg-red-600/20 text-red-300 border-red-600/30';
+      default: return 'bg-gray-600/20 text-gray-300 border-gray-600/30';
     }
   };
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">My Applications</h2>
+      <h2 className="text-2xl font-bold text-white mb-6">My Applications</h2>
       
       <div className="space-y-4">
         {applications.map((application) => (
-          <div key={application.id} className="border border-gray-200 rounded-lg p-6">
+          <div key={application.id} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:bg-white/10 transition-all duration-300">
             <div className="flex justify-between items-start mb-4">
               <div>
-                <h3 className="text-xl font-semibold text-gray-900">{application.job_title}</h3>
-                <p className="text-gray-600">Applied on {new Date(application.applied_at).toLocaleDateString()}</p>
+                <h3 className="text-xl font-semibold text-white">{application.job_title}</h3>
+                <p className="text-gray-300">Applied on {new Date(application.applied_at).toLocaleDateString()}</p>
               </div>
-              <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(application.status)}`}>
+              <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(application.status)}`}>
                 {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
               </span>
             </div>
             
             {application.cover_letter && (
               <div className="mt-4">
-                <h4 className="font-medium text-gray-900 mb-2">Cover Letter</h4>
-                <p className="text-gray-700 text-sm">{application.cover_letter}</p>
+                <h4 className="font-medium text-white mb-2">Cover Letter</h4>
+                <p className="text-gray-300 text-sm">{application.cover_letter}</p>
               </div>
             )}
           </div>
