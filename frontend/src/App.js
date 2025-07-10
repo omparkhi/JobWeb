@@ -731,44 +731,44 @@ const JobsTab = ({ jobs, onApply, searchFilters, setSearchFilters, onSearch, app
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Available Jobs</h2>
+        <h2 className="text-2xl font-bold text-white">Available Jobs</h2>
       </div>
       
       {/* Search Filters */}
-      <div className="bg-gray-50 p-4 rounded-lg mb-6">
+      <div className="bg-white/5 backdrop-blur-md p-6 rounded-xl mb-6 border border-white/10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <input
             type="text"
             placeholder="Job Title"
             value={searchFilters.title}
             onChange={(e) => setSearchFilters({...searchFilters, title: e.target.value})}
-            className="px-3 py-2 border border-gray-300 rounded-md"
+            className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <input
             type="text"
             placeholder="Location"
             value={searchFilters.location}
             onChange={(e) => setSearchFilters({...searchFilters, location: e.target.value})}
-            className="px-3 py-2 border border-gray-300 rounded-md"
+            className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <input
             type="text"
             placeholder="Company"
             value={searchFilters.company}
             onChange={(e) => setSearchFilters({...searchFilters, company: e.target.value})}
-            className="px-3 py-2 border border-gray-300 rounded-md"
+            className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <input
             type="text"
             placeholder="Experience Level"
             value={searchFilters.experience}
             onChange={(e) => setSearchFilters({...searchFilters, experience: e.target.value})}
-            className="px-3 py-2 border border-gray-300 rounded-md"
+            className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
         <button
           onClick={onSearch}
-          className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-all duration-300 transform hover:scale-105"
         >
           Search Jobs
         </button>
@@ -777,39 +777,39 @@ const JobsTab = ({ jobs, onApply, searchFilters, setSearchFilters, onSearch, app
       {/* Jobs List */}
       <div className="space-y-4">
         {jobs.map((job) => (
-          <div key={job.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+          <div key={job.id} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 hover:bg-white/10 transition-all duration-300 transform hover:scale-105">
             <div className="flex justify-between items-start mb-4">
               <div>
-                <h3 className="text-xl font-semibold text-gray-900">{job.title}</h3>
-                <p className="text-blue-600 font-medium">{job.company_name}</p>
-                <p className="text-gray-600">{job.location} • {job.experience_level} • {job.job_type}</p>
+                <h3 className="text-xl font-semibold text-white">{job.title}</h3>
+                <p className="text-blue-400 font-medium">{job.company_name}</p>
+                <p className="text-gray-300">{job.location} • {job.experience_level} • {job.job_type}</p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-400">
                   {new Date(job.created_at).toLocaleDateString()}
                 </p>
                 {job.salary_range && (
-                  <p className="text-sm font-medium text-green-600">{job.salary_range}</p>
+                  <p className="text-sm font-medium text-green-400">{job.salary_range}</p>
                 )}
               </div>
             </div>
             
             <div className="mb-4">
-              <p className="text-gray-700 mb-2">{job.description}</p>
-              <div className="text-sm text-gray-600">
+              <p className="text-gray-300 mb-2">{job.description}</p>
+              <div className="text-sm text-gray-400">
                 <strong>Requirements:</strong> {job.requirements}
               </div>
             </div>
             
             <div className="flex justify-end">
               {appliedJobIds.includes(job.id) ? (
-                <span className="bg-green-100 text-green-800 px-4 py-2 rounded">
+                <span className="bg-green-600/20 text-green-300 px-4 py-2 rounded-lg border border-green-600/30">
                   Applied
                 </span>
               ) : (
                 <button
                   onClick={() => onApply(job.id)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105"
                 >
                   Apply Now
                 </button>
