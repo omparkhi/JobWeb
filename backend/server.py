@@ -320,7 +320,7 @@ async def update_candidate_profile(
             {"$set": update_data}
         )
     profile = await db.candidate_profiles.find_one({"user_id": current_user.id})
-    return profile
+    return serialize_doc(profile)
 
 @api_router.get("/candidate/jobs")
 async def search_jobs(
