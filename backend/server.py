@@ -464,7 +464,7 @@ async def get_job_applications(
         raise HTTPException(status_code=404, detail="Job not found")
     
     applications = await db.applications.find({"job_id": job_id}).to_list(100)
-    return applications
+    return serialize_doc(applications)
 
 @api_router.put("/company/applications/{application_id}/status")
 async def update_application_status(
