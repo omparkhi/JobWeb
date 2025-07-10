@@ -526,7 +526,7 @@ async def reject_company(
 @api_router.get("/admin/jobs")
 async def get_all_jobs(current_user: User = Depends(require_role(UserRole.ADMIN))):
     jobs = await db.jobs.find({}).to_list(100)
-    return jobs
+    return serialize_doc(jobs)
 
 @api_router.get("/admin/analytics")
 async def get_analytics(current_user: User = Depends(require_role(UserRole.ADMIN))):
