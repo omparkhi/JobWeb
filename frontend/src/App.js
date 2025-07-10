@@ -114,15 +114,31 @@ const Navigation = () => {
   if (!user) return null;
 
   return (
-    <nav className="bg-gray-900 text-white p-4">
+    <nav className="bg-black border-b border-white/10 text-white p-4 shadow-lg">
       <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-xl font-bold text-blue-400">CMO India Hiring</h1>
         <div className="flex items-center space-x-4">
-          <span className="text-sm">Welcome, {user.name}</span>
-          <span className="text-xs bg-blue-600 px-2 py-1 rounded">{user.role}</span>
+          <h1 className="text-2xl font-bold">
+            <span className="text-white">CMO India</span>
+            <span className="text-blue-400 ml-2">Hiring</span>
+          </h1>
+        </div>
+        <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+              <span className="text-white font-semibold text-sm">
+                {user.name.charAt(0).toUpperCase()}
+              </span>
+            </div>
+            <div>
+              <span className="text-sm font-medium">{user.name}</span>
+              <span className="text-xs bg-blue-600 px-2 py-1 rounded-full ml-2 capitalize">
+                {user.role}
+              </span>
+            </div>
+          </div>
           <button
             onClick={handleLogout}
-            className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm"
+            className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105"
           >
             Logout
           </button>
