@@ -497,7 +497,7 @@ async def get_all_users(current_user: User = Depends(require_role(UserRole.ADMIN
 @api_router.get("/admin/companies")
 async def get_all_companies(current_user: User = Depends(require_role(UserRole.ADMIN))):
     companies = await db.company_profiles.find({}).to_list(100)
-    return companies
+    return serialize_doc(companies)
 
 @api_router.put("/admin/companies/{company_id}/approve")
 async def approve_company(
