@@ -430,7 +430,7 @@ async def create_job(
 @api_router.get("/company/jobs")
 async def get_company_jobs(current_user: User = Depends(require_role(UserRole.COMPANY))):
     jobs = await db.jobs.find({"company_id": current_user.id}).to_list(100)
-    return jobs
+    return serialize_doc(jobs)
 
 @api_router.put("/company/jobs/{job_id}")
 async def update_job(
