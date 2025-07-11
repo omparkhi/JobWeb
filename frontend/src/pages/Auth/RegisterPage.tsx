@@ -1,28 +1,60 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Eye, EyeOff, Briefcase, Mail, Lock, User, Building2, UserCheck } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { Eye, EyeOff, Mail, Lock, User, Building2, Shield, Briefcase } from 'lucide-react';
-import LoadingSpinner from '../../components/Common/LoadingSpinner';
+import { RegisterData } from '../../types';
 
 const RegisterPage: React.FC = () => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const initialRole = searchParams.get('role') as 'candidate' | 'company' | 'admin' || 'candidate';
+  const { register } = useAuth();
   
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegisterData>({
     email: '',
     password: '',
-    confirmPassword: '',
     name: '',
-    role: initialRole,
+    role: (searchParams.get('role') as 'candidate' | 'company' | 'admin') || 'candidate',
+    companyName: '',
   });
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  
-  const { register, loading } = useAuth();
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const roles = [
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (formData.password !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      alert('Password must be at least 6 characters long');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await register(formData);
+      navigate('/dashboard');
+    } catch (error: any) {
+      console.error('Registration error:', error);
+      // Error is already handled by the auth context
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const roleOptions = [
     {
       value: 'candidate',
       label: 'Job Seeker',
@@ -38,306 +70,267 @@ const RegisterPage: React.FC = () => {
     {
       value: 'admin',
       label: 'Administrator',
-      description: 'Platform management',
-      icon: Shield,
+      description: 'Platform administration',
+      icon: UserCheck,
     },
   ];
 
-  const validateForm = () => {
-    const newErrors: { [key: string]: string } = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    } else if (formData.name.trim().length < 2) {
-      newErrors.name = 'Name must be at least 2 characters';
-    }
-
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-
-    if (!formData.role) {
-      newErrors.role = 'Please select a role';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) return;
-
-    try {
-      await register({
-        email: formData.email,
-        password: formData.password,
-        name: formData.name,
-        role: formData.role as 'candidate' | 'company' | 'admin',
-      });
-      navigate(`/${formData.role}/dashboard`);
-    } catch (error) {
-      // Error is handled by the auth context
-    }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
-  };
-
-  const handleRoleChange = (role: string) => {
-    setFormData(prev => ({ ...prev, role }));
-    if (errors.role) {
-      setErrors(prev => ({ ...prev, role: '' }));
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-purple-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        {/* Header */}
-        <div className="text-center">
-          <div className="flex justify-center">
-            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
-              <Briefcase className="w-8 h-8 text-blue-600" />
+    <div className="min-h-screen flex">
+      {/* Left Side - Image */}
+      <div className="hidden lg:block lg:w-1/2 relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-blue-600">
+          <div className="absolute inset-0 bg-black/20"></div>
+          <div className="relative h-full flex items-center justify-center p-12">
+            <div className="text-white text-center">
+              <h2 className="text-4xl font-bold mb-6">
+                Start your career journey today
+              </h2>
+              <p className="text-xl text-purple-100 mb-8">
+                Connect with top companies and discover amazing opportunities that match your skills
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold">✓</span>
+                  </div>
+                  <span>Create professional profile</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold">✓</span>
+                  </div>
+                  <span>Apply to thousands of jobs</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold">✓</span>
+                  </div>
+                  <span>Get hired by top companies</span>
+                </div>
+              </div>
             </div>
           </div>
-          <h2 className="mt-6 text-3xl font-bold text-white">
-            Create your account
-          </h2>
-          <p className="mt-2 text-sm text-blue-100">
-            Join thousands of professionals on CMO India
-          </p>
         </div>
+      </div>
 
-        {/* Form */}
-        <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-xl p-8 border border-white/20">
-          <form className="space-y-6" onSubmit={handleSubmit}>
+      {/* Right Side - Form */}
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-md w-full space-y-8">
+          {/* Header */}
+          <div className="text-center">
+            <Link to="/" className="inline-flex items-center justify-center mb-8">
+              <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                <Briefcase className="w-7 h-7 text-white" />
+              </div>
+              <span className="ml-3 text-2xl font-bold text-gray-900">CMO India</span>
+            </Link>
+            <h2 className="text-3xl font-bold text-gray-900">Create your account</h2>
+            <p className="mt-2 text-gray-600">Join thousands of professionals</p>
+          </div>
+
+          {/* Form */}
+          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             {/* Role Selection */}
             <div>
-              <label className="block text-sm font-medium text-white mb-3">
-                I am a...
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                I want to
               </label>
-              <div className="grid grid-cols-1 gap-3">
-                {roles.map((role) => {
-                  const Icon = role.icon;
+              <div className="grid grid-cols-1 gap-2">
+                {roleOptions.slice(0, 2).map((option) => {
+                  const Icon = option.icon;
                   return (
-                    <button
-                      key={role.value}
-                      type="button"
-                      onClick={() => handleRoleChange(role.value)}
-                      className={`relative flex items-center p-4 rounded-lg border-2 transition-all ${
-                        formData.role === role.value
-                          ? 'border-white bg-white/20 text-white'
-                          : 'border-white/30 bg-white/10 text-white/80 hover:bg-white/15'
+                    <label
+                      key={option.value}
+                      className={`relative flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-200 ${
+                        formData.role === option.value
+                          ? 'border-blue-500 bg-blue-50'
+                          : 'border-gray-300'
                       }`}
                     >
-                      <Icon className="w-6 h-6 mr-3" />
-                      <div className="text-left">
-                        <div className="font-medium">{role.label}</div>
-                        <div className="text-sm opacity-80">{role.description}</div>
+                      <input
+                        type="radio"
+                        name="role"
+                        value={option.value}
+                        checked={formData.role === option.value}
+                        onChange={handleChange}
+                        className="sr-only"
+                      />
+                      <Icon className={`w-5 h-5 mr-3 ${
+                        formData.role === option.value ? 'text-blue-600' : 'text-gray-400'
+                      }`} />
+                      <div>
+                        <div className={`font-medium ${
+                          formData.role === option.value ? 'text-blue-900' : 'text-gray-900'
+                        }`}>
+                          {option.label}
+                        </div>
+                        <div className={`text-sm ${
+                          formData.role === option.value ? 'text-blue-700' : 'text-gray-600'
+                        }`}>
+                          {option.description}
+                        </div>
                       </div>
-                    </button>
+                    </label>
                   );
                 })}
               </div>
-              {errors.role && (
-                <p className="mt-1 text-sm text-red-300">{errors.role}</p>
-              )}
             </div>
 
-            {/* Name */}
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
-                {formData.role === 'company' ? 'Company Name' : 'Full Name'}
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  {formData.role === 'company' ? (
-                    <Building2 className="h-5 w-5 text-gray-400" />
-                  ) : (
-                    <User className="h-5 w-5 text-gray-400" />
-                  )}
+            <div className="space-y-4">
+              {/* Name */}
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                  {formData.role === 'candidate' ? 'Full Name' : 'Contact Person Name'}
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    required
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
+                    placeholder="Enter your full name"
+                  />
                 </div>
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="block w-full pl-10 pr-3 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
-                  placeholder={formData.role === 'company' ? 'Enter company name' : 'Enter your full name'}
-                />
               </div>
-              {errors.name && (
-                <p className="mt-1 text-sm text-red-300">{errors.name}</p>
-              )}
-            </div>
 
-            {/* Email */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
-                Email address
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+              {/* Company Name (for company role) */}
+              {formData.role === 'company' && (
+                <div>
+                  <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-2">
+                    Company Name
+                  </label>
+                  <div className="relative">
+                    <Building2 className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                    <input
+                      id="companyName"
+                      name="companyName"
+                      type="text"
+                      required
+                      value={formData.companyName}
+                      onChange={handleChange}
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
+                      placeholder="Enter your company name"
+                    />
+                  </div>
                 </div>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="block w-full pl-10 pr-3 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
-                  placeholder="Enter your email"
-                />
-              </div>
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-300">{errors.email}</p>
               )}
-            </div>
 
-            {/* Password */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+              {/* Email */}
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  Email address
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
+                    placeholder="Enter your email"
+                  />
                 </div>
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className="block w-full pl-10 pr-10 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
-                  placeholder="Create a password"
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400 hover:text-white" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-gray-400 hover:text-white" />
-                  )}
-                </button>
               </div>
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-300">{errors.password}</p>
-              )}
-            </div>
 
-            {/* Confirm Password */}
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-white mb-2">
-                Confirm Password
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+              {/* Password */}
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
+                    placeholder="Create a password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
                 </div>
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  className="block w-full pl-10 pr-10 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
-                  placeholder="Confirm your password"
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400 hover:text-white" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-gray-400 hover:text-white" />
-                  )}
-                </button>
               </div>
-              {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-red-300">{errors.confirmPassword}</p>
-              )}
+
+              {/* Confirm Password */}
+              <div>
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    required
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
+                    placeholder="Confirm your password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+              </div>
             </div>
 
-            {/* Terms and conditions */}
-            <div className="flex items-center">
+            {/* Terms & Conditions */}
+            <div className="flex items-start">
               <input
                 id="terms"
                 name="terms"
                 type="checkbox"
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 required
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mt-1"
               />
-              <label htmlFor="terms" className="ml-2 block text-sm text-white">
+              <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
                 I agree to the{' '}
-                <Link to="/terms" className="text-blue-300 hover:text-white">
-                  Terms and Conditions
+                <Link to="/terms" className="text-blue-600 hover:text-blue-700 font-medium">
+                  Terms of Service
                 </Link>{' '}
                 and{' '}
-                <Link to="/privacy" className="text-blue-300 hover:text-white">
+                <Link to="/privacy" className="text-blue-600 hover:text-blue-700 font-medium">
                   Privacy Policy
                 </Link>
               </label>
             </div>
 
-            {/* Submit button */}
-            <div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-blue-900 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {loading ? (
-                  <LoadingSpinner size="sm" />
-                ) : (
-                  'Create Account'
-                )}
-              </button>
-            </div>
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+            >
+              {loading ? 'Creating account...' : 'Create account'}
+            </button>
           </form>
 
           {/* Sign in link */}
-          <div className="mt-6 text-center">
-            <p className="text-sm text-white">
+          <div className="text-center">
+            <p className="text-gray-600">
               Already have an account?{' '}
-              <Link
-                to="/login"
-                className="font-medium text-blue-300 hover:text-white transition-colors"
-              >
+              <Link to="/login" className="text-blue-600 hover:text-blue-700 font-medium">
                 Sign in here
               </Link>
             </p>
