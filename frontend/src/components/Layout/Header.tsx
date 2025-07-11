@@ -1,291 +1,212 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, User, LogOut, Settings, Bell, Briefcase } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { 
+  User, 
+  LogOut, 
+  Menu, 
+  X, 
+  Briefcase, 
+  Users, 
+  Building2,
+  Search,
+  Bell,
+  Settings
+} from 'lucide-react';
 
 const Header: React.FC = () => {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate('/');
-    setIsProfileMenuOpen(false);
   };
 
-  const getDashboardLink = () => {
-    if (!user) return '/';
+  const isActive = (path: string) => location.pathname === path;
+
+  const getNavItems = () => {
+    if (!user) return [];
+
     switch (user.role) {
       case 'candidate':
-        return '/candidate/dashboard';
+        return [
+          { path: '/candidate/dashboard', label: 'Dashboard', icon: User },
+          { path: '/candidate/jobs', label: 'Find Jobs', icon: Search },
+          { path: '/candidate/applications', label: 'My Applications', icon: Briefcase },
+          { path: '/candidate/profile', label: 'Profile', icon: Settings },
+        ];
       case 'company':
-        return '/company/dashboard';
+        return [
+          { path: '/company/dashboard', label: 'Dashboard', icon: Building2 },
+          { path: '/company/jobs', label: 'My Jobs', icon: Briefcase },
+          { path: '/company/applications', label: 'Applications', icon: Users },
+          { path: '/company/profile', label: 'Company Profile', icon: Settings },
+        ];
       case 'admin':
-        return '/admin/dashboard';
+        return [
+          { path: '/admin/dashboard', label: 'Dashboard', icon: User },
+          { path: '/admin/users', label: 'Users', icon: Users },
+          { path: '/admin/companies', label: 'Companies', icon: Building2 },
+          { path: '/admin/jobs', label: 'Jobs', icon: Briefcase },
+        ];
       default:
-        return '/';
+        return [];
     }
   };
 
-  const getProfileLink = () => {
-    if (!user) return '/';
-    switch (user.role) {
-      case 'candidate':
-        return '/candidate/profile';
-      case 'company':
-        return '/company/profile';
-      default:
-        return '/';
-    }
-  };
+  const navItems = getNavItems();
 
   return (
-    <header className="bg-black/20 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
+    <header className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <Briefcase className="h-5 w-5 text-white" />
+            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <Briefcase className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xl font-bold text-white">CMO India</span>
+            <div className="hidden sm:block">
+              <h1 className="text-xl font-bold text-gray-900">CMO India</h1>
+              <p className="text-xs text-gray-500">Hiring Platform</p>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link
-              to="/jobs"
-              className="text-gray-300 hover:text-white transition-colors font-medium"
-            >
-              Find Jobs
-            </Link>
-            {isAuthenticated && user?.role === 'company' && (
-              <Link
-                to="/company/dashboard"
-                className="text-gray-300 hover:text-white transition-colors font-medium"
-              >
-                Post Jobs
-              </Link>
-            )}
-            <Link
-              to="/about"
-              className="text-gray-300 hover:text-white transition-colors font-medium"
-            >
-              About
-            </Link>
-            <Link
-              to="/contact"
-              className="text-gray-300 hover:text-white transition-colors font-medium"
-            >
-              Contact
-            </Link>
-          </nav>
+          {user && (
+            <nav className="hidden md:flex space-x-8">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      isActive(item.path)
+                        ? 'text-blue-600 bg-blue-50'
+                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+          )}
 
-          {/* Desktop Auth Section */}
-          <div className="hidden md:flex items-center space-x-4">
-            {isAuthenticated ? (
-              <div className="flex items-center space-x-4">
+          {/* Right side */}
+          <div className="flex items-center space-x-4">
+            {user ? (
+              <>
                 {/* Notifications */}
-                <button className="p-2 text-gray-400 hover:text-white transition-colors relative">
-                  <Bell className="h-5 w-5" />
-                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs"></span>
+                <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                  <Bell className="w-5 h-5" />
                 </button>
 
-                {/* Dashboard Link */}
-                <Link
-                  to={getDashboardLink()}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium"
-                >
-                  Dashboard
-                </Link>
-
-                {/* Profile Dropdown */}
+                {/* Profile Menu */}
                 <div className="relative">
                   <button
                     onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                    className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors"
+                    className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-50 transition-colors"
                   >
-                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
-                      {user?.name?.charAt(0).toUpperCase()}
+                    <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                      <User className="w-4 h-4 text-white" />
                     </div>
-                    <span className="font-medium">{user?.name}</span>
+                    <div className="hidden sm:block text-left">
+                      <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                      <p className="text-xs text-gray-500 capitalize">{user.role}</p>
+                    </div>
                   </button>
 
+                  {/* Profile Dropdown */}
                   {isProfileMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-xl border border-white/10 py-2">
-                      <div className="px-4 py-2 border-b border-white/10">
-                        <p className="text-sm text-white font-medium">{user?.name}</p>
-                        <p className="text-xs text-gray-400">{user?.email}</p>
-                        <span className={`inline-block mt-1 px-2 py-1 rounded-full text-xs font-medium ${
-                          user?.role === 'admin' ? 'bg-red-600/20 text-red-300' :
-                          user?.role === 'company' ? 'bg-blue-600/20 text-blue-300' :
-                          'bg-green-600/20 text-green-300'
-                        }`}>
-                          {user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1)}
-                        </span>
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                      <div className="px-4 py-2 border-b border-gray-100">
+                        <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                        <p className="text-xs text-gray-500">{user.email}</p>
                       </div>
-                      
                       <Link
-                        to={getProfileLink()}
-                        className="flex items-center px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+                        to={`/${user.role}/profile`}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                         onClick={() => setIsProfileMenuOpen(false)}
                       >
-                        <User className="h-4 w-4 mr-2" />
-                        Profile
+                        <div className="flex items-center space-x-2">
+                          <Settings className="w-4 h-4" />
+                          <span>Settings</span>
+                        </div>
                       </Link>
-                      
-                      <Link
-                        to="/settings"
-                        className="flex items-center px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
-                        onClick={() => setIsProfileMenuOpen(false)}
-                      >
-                        <Settings className="h-4 w-4 mr-2" />
-                        Settings
-                      </Link>
-                      
                       <button
                         onClick={handleLogout}
-                        className="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-white/10 transition-colors"
+                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                       >
-                        <LogOut className="h-4 w-4 mr-2" />
-                        Logout
+                        <div className="flex items-center space-x-2">
+                          <LogOut className="w-4 h-4" />
+                          <span>Sign out</span>
+                        </div>
                       </button>
                     </div>
                   )}
                 </div>
-              </div>
+              </>
             ) : (
               <div className="flex items-center space-x-4">
                 <Link
                   to="/login"
-                  className="text-gray-300 hover:text-white transition-colors font-medium"
+                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
-                  Login
+                  Sign in
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors font-medium"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
                 >
-                  Sign Up
+                  Get started
                 </Link>
               </div>
             )}
-          </div>
 
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 text-gray-400 hover:text-white transition-colors"
-          >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+            {/* Mobile menu button */}
+            {user && (
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="md:hidden p-2 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-50"
+              >
+                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-white/10">
-            <div className="flex flex-col space-y-4">
-              <Link
-                to="/jobs"
-                className="text-gray-300 hover:text-white transition-colors font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Find Jobs
-              </Link>
-              {isAuthenticated && user?.role === 'company' && (
-                <Link
-                  to="/company/dashboard"
-                  className="text-gray-300 hover:text-white transition-colors font-medium"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Post Jobs
-                </Link>
-              )}
-              <Link
-                to="/about"
-                className="text-gray-300 hover:text-white transition-colors font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                About
-              </Link>
-              <Link
-                to="/contact"
-                className="text-gray-300 hover:text-white transition-colors font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Contact
-              </Link>
-
-              {isAuthenticated ? (
-                <div className="pt-4 border-t border-white/10">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-medium">
-                      {user?.name?.charAt(0).toUpperCase()}
-                    </div>
-                    <div>
-                      <p className="text-white font-medium">{user?.name}</p>
-                      <p className="text-xs text-gray-400">{user?.email}</p>
-                    </div>
-                  </div>
-                  
+        {user && isMenuOpen && (
+          <div className="md:hidden border-t border-gray-200 py-4">
+            <nav className="space-y-2">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
                   <Link
-                    to={getDashboardLink()}
-                    className="block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium mb-2"
+                    key={item.path}
+                    to={item.path}
+                    className={`flex items-center space-x-3 px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                      isActive(item.path)
+                        ? 'text-blue-600 bg-blue-50'
+                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                    }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Dashboard
+                    <Icon className="w-5 h-5" />
+                    <span>{item.label}</span>
                   </Link>
-                  
-                  <Link
-                    to={getProfileLink()}
-                    className="block text-gray-300 hover:text-white transition-colors font-medium mb-2"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Profile
-                  </Link>
-                  
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setIsMenuOpen(false);
-                    }}
-                    className="block w-full text-left text-red-400 hover:text-red-300 transition-colors font-medium"
-                  >
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <div className="pt-4 border-t border-white/10 space-y-2">
-                  <Link
-                    to="/login"
-                    className="block text-gray-300 hover:text-white transition-colors font-medium"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/register"
-                    className="block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium text-center"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Sign Up
-                  </Link>
-                </div>
-              )}
-            </div>
+                );
+              })}
+            </nav>
           </div>
         )}
       </div>
-
-      {/* Click outside to close profile menu */}
-      {isProfileMenuOpen && (
-        <div
-          className="fixed inset-0 z-30"
-          onClick={() => setIsProfileMenuOpen(false)}
-        />
-      )}
     </header>
   );
 };
