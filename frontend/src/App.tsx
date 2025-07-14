@@ -24,7 +24,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; allowedRoles?: strin
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center">
         <LoadingSpinner size="lg" />
       </div>
     );
@@ -101,6 +101,23 @@ const App: React.FC = () => {
                 }
               />
               <Route
+                path="/candidate/jobs"
+                element={
+                  <ProtectedRoute allowedRoles={['candidate']}>
+                    <JobsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/candidate/applications"
+                element={
+                  <ProtectedRoute allowedRoles={['candidate']}>
+                    <CandidateDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              
+              <Route
                 path="/company/dashboard"
                 element={
                   <ProtectedRoute allowedRoles={['company']}>
@@ -117,6 +134,23 @@ const App: React.FC = () => {
                 }
               />
               <Route
+                path="/company/jobs"
+                element={
+                  <ProtectedRoute allowedRoles={['company']}>
+                    <CompanyDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/company/applications"
+                element={
+                  <ProtectedRoute allowedRoles={['company']}>
+                    <CompanyDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              
+              <Route
                 path="/admin/dashboard"
                 element={
                   <ProtectedRoute allowedRoles={['admin']}>
@@ -125,10 +159,26 @@ const App: React.FC = () => {
                 }
               />
               <Route
-                path="/admin/profile"
+                path="/admin/users"
                 element={
                   <ProtectedRoute allowedRoles={['admin']}>
-                    <ProfilePage />
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/companies"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/jobs"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <AdminDashboard />
                   </ProtectedRoute>
                 }
               />
